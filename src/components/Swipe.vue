@@ -1,0 +1,51 @@
+<template>
+	<div class="swiper-container">
+	    <!-- Additional required wrapper -->
+	    <div class="swiper-wrapper">
+	        <!-- Slides -->
+	        <div class="swp-page swiper-slide" v-for="item in lists">
+	        	<a class="js-no-follow" :href="item.clickUrl">
+	        		<img class="goods-main-photo fadeIn" :src="item.img" alt="">
+	        	</a>
+	        </div>
+	    </div>
+	    <!-- If we need pagination -->
+	    <div class="swiper-pagination"></div>
+	</div>
+</template>
+
+<script>
+	import Swiper from 'swiper'
+	import 'swiper/dist/css/swiper.css'
+
+	export default{
+		props: {
+			lists: {
+				type: Array,
+				required: true
+			}
+		},
+		mounted(){
+			this.init()
+		},
+		methods: {
+			init(){
+				var mySwiper = new Swiper ('.swiper-container', {
+				    loop: true,
+				    pagination: {
+				    	el: '.swiper-pagination'
+				    }
+			  	})	
+			}
+		}
+	}
+
+  	
+</script>
+
+<style>
+.swiper-slide img {
+  width: 100%;
+  height: 100%;
+}
+</style>
