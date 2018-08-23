@@ -69,7 +69,7 @@
           <li class="goods-item" 
             v-if="searchList"
             v-for="li in searchList">
-            <a href="#">
+            <a :href="'goods.html?id='+li.id">
               <div class="thumb">
                 <img :src="li.img">
                 <i class="sell-out" v-show="li.isOut"></i>
