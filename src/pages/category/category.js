@@ -6,6 +6,7 @@ import url from 'js/api.js'
 import Vue from 'vue'
 import axios from 'axios'
 import Foot from 'components/Foot.vue'
+import mixin from 'js/mixin.js'
 
 new Vue({
 	el: '#app',
@@ -43,5 +44,6 @@ new Vue({
 				this.rankData = res.data.data
 			})
 		}
-	}
+	},
+	mixins: [mixin]
 })
