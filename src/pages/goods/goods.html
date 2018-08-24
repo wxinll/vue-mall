@@ -13,41 +13,17 @@
   <link rel="shortcut icon" href="https://b.yzcdn.cn/v2/image/yz_fc.ico">
   <title>商品详情</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <style>
+    [v-cloak]{display: none}
+  </style>
 </head>
 
 <body class=" body-fixed-bottomdefault-theme">
-  <div id="app" v-if="details">
+  <div id="app" v-if="details" v-cloak>
     <div class="container wap-goods internal-purchase" style="min-height: 617px;">
       <div class="content no-sidebar">
         <div class="content-body">
-          <div class="custom-image-swiper custom-goods-swiper js-swp swp">
-            <div class="swiper-wrapper js-swp-wrap" style="height: 375px;" data-height="320">
-              <div class="swp-page" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; display: block; transform: translate3d(-9999px, 0px, 0px);">
-                <img class="" src="https://img.yzcdn.cn/upload_files/2017/07/12/FkSvYz8FLLD9-t0smXO43hF6ov7S.jpg?imageView2/2/w/980/h/980/q/75/format/webp">
-              </div>
-              <div class="swp-page" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; display: block; transform: translate3d(-375px, 0px, 0px);">
-                <img class="js-res-load" data-src="https://img.yzcdn.cn/upload_files/2017/07/12/FvBRA_j6wl7CBVuNHQPl7FHkj0b1.jpg?imageView2/2/w/980/h/980/q/75/format/webp" src="https://img.yzcdn.cn/upload_files/2017/07/12/FvBRA_j6wl7CBVuNHQPl7FHkj0b1.jpg?imageView2/2/w/980/h/980/q/75/format/webp">
-              </div>
-              <div class="swp-page page-in-view" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; display: block; transform: translate3d(0px, 0px, 0px);">
-                <img class="js-res-load" data-src="https://img.yzcdn.cn/upload_files/2017/07/12/FpetvOfbRCRmyeg32DBunok9Uvmo.jpg?imageView2/2/w/980/h/980/q/75/format/webp" src="https://img.yzcdn.cn/upload_files/2017/07/12/FpetvOfbRCRmyeg32DBunok9Uvmo.jpg?imageView2/2/w/980/h/980/q/75/format/webp">
-              </div>
-              <div class="swp-page" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; display: block; transform: translate3d(375px, 0px, 0px);">
-                <img class="js-res-load" data-src="https://img.yzcdn.cn/upload_files/2017/07/12/FqYpph8-5qfY-sCecemc7LTZb2O2.jpg?imageView2/2/w/980/h/980/q/75/format/webp" src="https://img.yzcdn.cn/upload_files/2017/07/12/FqYpph8-5qfY-sCecemc7LTZb2O2.jpg?imageView2/2/w/980/h/980/q/75/format/webp">
-              </div>
-              <div class="swp-page" style="position: absolute; top: 0px; left: 0px; width: 100%; height: 100%; display: block; transform: translate3d(-9999px, 0px, 0px);">
-                <img class="js-res-load" data-src="https://img.yzcdn.cn/upload_files/2017/07/12/FmgpyGwZqitXF7LWnVzmHHmCVfB4.jpg?imageView2/2/w/980/h/980/q/75/format/webp" src="https://img.yzcdn.cn/upload_files/2017/07/12/FmgpyGwZqitXF7LWnVzmHHmCVfB4.jpg?imageView2/2/w/980/h/980/q/75/format/webp">
-              </div>
-            </div>
-            <div class="swiper-pagination js-swiper-pagination">
-              <ul class="swp-thumbnail-list">
-                <li class="swiper-pagination-switch"></li>
-                <li class="swiper-pagination-switch"></li>
-                <li class="swiper-pagination-switch swiper-active-switch"></li>
-                <li class="swiper-pagination-switch"></li>
-                <li class="swiper-pagination-switch"></li>
-              </ul>
-            </div>
-          </div>
+          <Swipe :lists="swipeLists"></Swipe>
           <div class="goods-header">
             <h2 class="title">{{details.title}}</h2>
             <span class="hide js-add-wish js-wish-animate wish-add  font-size-12 tag tag-redf30 pull-right">
@@ -78,7 +54,8 @@
               </dl>
             </div>
           </div>
-          <div class="sku-detail adv-opts">
+          <div class="sku-detail adv-opts"
+            @click="chooseSku(3)">
             <div class="sku-detail-inner adv-opts-inner">
               <dl class="sku-group select-sku js-select-sku">
                 <dt><span class="js-sku-label">选择</span>：</dt>
@@ -112,17 +89,23 @@
           <a class="js-package-buy-block hide"></a>
           <div class="js-detail-container" style="margin-top: 10px;">
             <div class="js-tabber-container goods-detail">
+              <!-- 详情/成交入口选择 -->
               <div class="js-tabber tabber tabber-n2 clearfix orange">
                 <button 
-                data-type="goods" 
-                class="active">
+                data-type="goods"
+                @click = "changeTabIndex(0)"
+                :class="{active: tabIndex === 0}">
                   商品详情 </button>
                 <button 
+                @click = "changeTabIndex(1)"
+                :class="{active: tabIndex === 1}"
                 data-type="sales">
                   本店成交 </button>
               </div>
               <div class="js-tabber-content">
-                <div class="js-part hide" data-type="sales">
+                <div class="js-part" 
+                  v-show="tabIndex === 1"
+                  data-type="sales">
                   <div class="js-traderecord-list block-list-traderecord">
                     <div class="list-header">
                       <span class="col-1">买家</span>
@@ -130,11 +113,17 @@
                       <span class="col-3 center">数量</span>
                     </div>
                     <div class="js-list b-list block block-list">
-                    </div>
+                        <div class="block-item" v-for="list in dealLists">
+                          <span class="col-1 c-gray-darker">{{list.buyer}}</span>
+                          <span class="col-2 c-gray-dark center">{{list.time}}</span>
+                          <span class="col-3 c-gray-darker center">{{list.num}}</span>
+                        </div>
+                      </div>
                   </div>
                 </div>
                 <div 
-                  v-html="details.description" 
+                  v-html="details.description"
+                  v-show="tabIndex === 0"
                   class="js-part js-goods-detail goods-tabber-c" 
                   data-type="goods">
                 </div>
@@ -147,12 +136,15 @@
               <a href="https://h5.youzan.com/v2/showcase/homepage?kdt_id=16546132" class="js-call-im icons icons-home">店铺</a>
               <a href="javascript:;" class="js-yz-zan icons icons-zan ">收藏</a>
             </div>
-            <div class="stick-bottom-btns">
+            <div class="stick-bottom-btns"
+              >
               <!-- 尚未开售 -->
-              <div class="btn-cart">
-                <a href="https://h5.youzan.com/v2/showcase/goods?alias=1y7n2wi58q1as&amp;source=yzapp&amp;f_platform=yzapp&amp;reft=1499937523785&amp;spm=mars20003" class="js-add-cart">加入购物车</a>
+              <div class="btn-cart" 
+                @click="chooseSku(1)">
+                <a href="#" class="js-add-cart">加入购物车</a>
               </div>
-              <div class="btn-buy">
+              <div class="btn-buy" 
+                @click="chooseSku(2)">
                 <a href="javascript:;" class="js-buy-it">立即购买</a>
               </div>
             </div>
@@ -245,8 +237,15 @@
       <div class="history-wrap center">
         <ul class="history-list search-recom-list js-history-list clearfix"></ul><a class="tag tag-clear js-tag-clear c-gray-darker hide" href="javascript:;">清除历史搜索</a></div>
     </div>
-    <div id="yFzBKP9GDL" style="height: 100%; position: fixed; top: 0px; left: 0px; right: 0px; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; transition: none 0.2s ease; opacity: 1; display: none;"></div>
-    <div id="QfEqtDbeK9" class="sku-layout sku-box-shadow popup" style="overflow: hidden; position: absolute; z-index: 1000; background: white; bottom: 0px; left: 0px; right: 0px; visibility: visible; transform: translate3d(0px, 0px, 0px); transition: all 300ms ease; opacity: 1; display: none;">
+    <!-- Mask 阴影层-->
+    <div id="yFzBKP9GDL" 
+      v-show="showSku"
+      style="height: 100%; position: fixed; top: 0px; left: 0px; right: 0px; background-color: rgba(0, 0, 0, 0.7); z-index: 1000; transition: none 0.2s ease; opacity: 1;"></div>
+    <!-- Popout 弹出层-->
+    <div id="QfEqtDbeK9" 
+      v-show="showSku"
+      class="sku-layout sku-box-shadow popup" style="overflow: hidden; position: absolute; z-index: 1000; background: white; bottom: 0px; left: 0px; right: 0px; visibility: visible; transform: translate3d(0px, 0px, 0px); transition: all 300ms ease; opacity: 1;">
+      <!-- 商品名信息 -->
       <div class="sku-layout-title name-card sku-name-card">
         <div class="thumb"><img class="js-goods-thumb goods-thumb" src="https://img.yzcdn.cn/upload_files/2017/07/12/FkSvYz8FLLD9-t0smXO43hF6ov7S.jpg?imageView2/2/w/100/h/100/q/75/format/webp?imageView2/2/w/100/h/100/q/75/format/webp" alt=""></div>
         <div class="detail goods-base-info clearfix">
@@ -258,10 +257,12 @@
             <div class="original-price vertical-middle font-size-14 line-through">108</div>
           </div>
         </div>
-        <div class="js-cancel sku-cancel">
+        <div class="js-cancel sku-cancel"
+         @click="showSku = false">
           <div class="cancel-img"></div>
         </div>
       </div>
+      <!-- 酒店信息 -->
       <div class="sku-detail adv-opts hotel-checkin-select" style="border: none; margin: 0; display: none;">
         <div class="sku-detail-inner adv-opts-inner-addons">
           <dl class="sku-group select-sku js-select-checkin-date">
@@ -271,6 +272,7 @@
         </div>
       </div>
       <div class="adv-opts layout-content" style="max-height: 554px;">
+        <!-- 规格信息 -->
         <div class="goods-models js-sku-views block block-list border-top-0">
           <dl class="clearfix block-item sku-list-container">
             <dt class="model-title sku-sel-title">
@@ -289,11 +291,11 @@
             <dd class="sku-quantity-contaienr">
               <dl class="clearfix">
                 <div class="quantity">
-                  <button class="minus disabled" type="button" disabled="true"></button>
-                  <input type="text" class="txt" pattern="[0-9]*" value="1">
+                  <button class="minus " type="button" :class="{disabled:skuNum===1}"></button>
+                  <input type="text" class="txt" pattern="[0-9]*" :value="skuNum">
                   <button class="plus" type="button"></button>
-                  <div class="response-area response-area-minus"></div>
-                  <div class="response-area response-area-plus"></div>
+                  <div class="response-area response-area-minus" @click="changeSkuNum(-1)"></div>
+                  <div class="response-area response-area-plus" @click="changeSkuNum(1)"></div>
                 </div>
               </dl>
             </dd>
@@ -305,25 +307,34 @@
           <div class="block-item block-item-messages" style="display: none;">
           </div>
         </div>
-        <!-- <div class="bottom-padding"></div> -->
+        <!-- foot加入购物车？购买 <div class="bottom-padding"></div> -->
         <div class="confirm-action content-foot clearfix">
           <!-- 加入购物车 -->
-          <div class="big-btn-1-1" style="display: none;">
+          <div class="big-btn-1-1" 
+            v-show="skuType === 1"
+            @click="addCart">
             <a href="javascript:;" class="js-confirm-it big-btn red-btn main-btn">加入购物车</a>
           </div>
           <!-- 立即购买 -->
-          <div class="big-btn-1-1">
-            <a href="javascript:;" class="js-confirm-it big-btn red-btn main-btn">下一步</a>
+          <div class="big-btn-1-1"
+            v-show="skuType === 2">
+            <a href="javascript:;" 
+              class="js-confirm-it big-btn red-btn main-btn">下一步</a>
           </div>
           <!-- 选择规格 -->
-          <div class="big-btn-2-1" style="display: none;">
-            <a href="javascript:;" class="js-mutiBtn-confirm cart big-btn orange-btn vice-btn">加入购物车</a>
+          <div class="big-btn-2-1" 
+            v-show="skuType === 3">
+            <a href="javascript:;" 
+              @click="addCart"
+              class="js-mutiBtn-confirm cart big-btn orange-btn vice-btn">加入购物车</a>
             <a href="javascript:;" class="js-mutiBtn-confirm confirm big-btn red-btn main-btn">立即购买</a>
           </div>
         </div>
       </div>
     </div>
-    <div class="motify" style="display: none;">
+    <!-- 成功后提示信息 -->
+    <div class="motify"
+      :style="{display: showAddMessage?'block':'none'}">
       <div class="motify-inner">已成功添加到购物车</div>
     </div>
   </div>
