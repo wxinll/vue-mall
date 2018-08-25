@@ -22,13 +22,15 @@
   import Address from 'js/addressService.js'
 
   export default{
-    data(){
-      return {
-        list: null
+    computed: {
+      list() {
+        return this.$store.state.lists
       }
     },
-    created(){
-      this.getList()
+    created() {
+      if(!this.list){
+        this.$store.dispatch('getLists')
+      }
     },
     methods: {
       toEdit(li){
@@ -38,11 +40,6 @@
             instance: li
           }})
       },
-      getList(){
-        Address.list().then(res=> {
-          this.list = res.data.lists
-        })
-      }
     }
   }
 </script>

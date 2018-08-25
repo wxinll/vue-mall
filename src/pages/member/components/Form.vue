@@ -18,7 +18,7 @@
         id: '',
         type: this.$route.query.type,
         instance: this.$route.query.instance,
-
+        isDefault: false,
       }
     },
     created(){
@@ -29,9 +29,21 @@
         this.tel = ad.tel
         this.address = ad.address
         this.id = ad.id
+        this.isDefault = ad.isDefault
+      }
+    },
+    computed: {
+      lists() {
+        return this.$store.state.lists
       }
     },
     watch: {
+      lists: {
+        handler() {
+          this.$router.go(-1)
+        },
+        deep: true
+      },
       provinceValue(val) {
         if (val === -1) return
         let list = this.addressData.list
@@ -63,44 +75,30 @@
     methods: {
       add() {
         // 校验
-        let {
-          name,
-          tel,
-          provinceValue,
-          cityValue,
-          districtValue,
-          address
-        } = this
-        let data = {
-          name,
-          tel,
-          provinceValue,
-          cityValue,
-          districtValue,
-          address
-        }
+        let { name, tel, provinceValue, cityValue, districtValue, address} = this
+        let data = { name, tel, provinceValue, cityValue, districtValue, address}
         if (this.type === 'edit') {
           data.id = this.id
-          Address.update(data).then(res => {
-            this.$router.go(-1)
-          })
+          data.isDefault = this.isDefault
+          console.log(data)
+          this.$store.dispatch('updateAction',data)
         } else {
-          Address.add(data).then(res => {
-            this.$router.go(-1)
-          })
+          this.$store.dispatch('addAction',data)
         }
       },
       remove(){
         if(window.confirm('确认删除')){
-          Address.remove(this.id).then(res=> {
-            this.$router.go(-1)
-          })
+          this.$store.dispatch('removeAction',this.id)
         }
       },
       setDefault(){
+        // Address.setDefault(this.id).then(res => {
+        //   this.isDefault = true
+        //   this.$router.go(-1)
+        // })
           Address.setDefault(this.id).then(res => {
-            this.$router.go(-1)
-        })
+            this.$store.dispatch('setDefaultAction', this.id)
+          })
       }
     }
   }
@@ -153,7 +151,7 @@
     </div>
     <div class="block stick-bottom-row center js-save-default "
       @click="setDefault">
-      <button class="btn btn-standard js-save-default-btn">设为默认收货地址</button>
+      <button class="btn btn-standard js-save-default-btn" @click="setDefault">设为默认收货地址</button>
     </div>
   </div>  
 </template>

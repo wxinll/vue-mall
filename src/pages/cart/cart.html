@@ -18,8 +18,12 @@
   <link rel="stylesheet" href="./css/cart.css">
 </head>
 
+<style>
+  [v-cloak] {display: none}
+</style>
+
 <body class=" body-fixed-bottom" style="">
-  <div id="app">
+  <div id="app" v-cloak>
     <div class="container " style="min-height: 581px;">
       <div class="content clearfix js-page-content">
         <div id="cart-container">
@@ -75,12 +79,12 @@
                               v-show="shop.isEditing">
                               <!---->
                               <div class="quantity">
-                                <button type="button" class="minus"
+                                <button type="button" class="minus" @click="reduceGoods(goods)"
                                   :class="{disabled: goods.number===1}"></button>
                                 <input type="text" pattern="[0-9]*" class="txt" :value="goods.number">
-                                <button type="button" class="plus "></button>
+                                <button type="button" class="plus " @click="addGoods(goods)"></button>
                                 <div class="response-area response-area-minus" @click="reduceGoods(goods)"></div>
-                                <div class="response-area response-area-plus" @click="addGoods(goods)"></div>
+                                <div class="response-area response-area-plus"  @click="addGoods(goods)" ></div>
                               </div>
                             </div>
                             <div class="price c-orange">
